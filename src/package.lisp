@@ -7,6 +7,7 @@
 	   #:add-attribute
 	   #:get-attribute
 	   #:description-attributes
+	   #:with-description-attributes
 	   #:define-attribute
 	   #:make-attribute
 	   #:=>

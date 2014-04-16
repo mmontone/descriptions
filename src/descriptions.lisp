@@ -51,6 +51,12 @@
                        (member prop (list 'description-name 'sheeple::nickname 'documentation)))
                      (available-properties description))))
 
+(defmacro with-description-attributes (attributes description &body body)
+  `(let ,(loop for attribute in attributes
+	      collect
+	      (list attribute `(get-attribute ,description ',attribute)))
+     ,@body))
+
 (defmacro define-attribute (name parents properties &rest options)
   (flet ((parse-attribute-property (property-spec)
 	   (destructuring-bind (property-name property-value &key reader writer accessor)

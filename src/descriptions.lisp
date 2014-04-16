@@ -27,11 +27,13 @@
     `(progn
        ;; The static description definition
        (defproto ,name ,(if parents
-			  parents
-			  (list '{description}))
-       ,(loop for attribute in attributes
-	   collect (list (first attribute) (parse-description-attribute attribute) :accessor nil))
-       ,@options)
+			    parents
+			    (list '{description}))
+	 
+	 ,(cons `(description-name ',name)
+		(loop for attribute in attributes
+		   collect (list (first attribute) (parse-description-attribute attribute) :accessor nil)))
+	 ,@options)
 
        ;; A description builder function
        (defun ,name (&rest parents)
@@ -141,7 +143,8 @@
 (defun make-description (&key parents attributes)
   (object
    :parents parents
-   :properties attributes))
+   :properties (cons (list 'description-name '{anonymous})
+		     attributes)))
 
 ;; Displaying
 
@@ -163,3 +166,15 @@
 					   (attribute-reader attribute)
 					   object))))
 	    (format stream "~A: ~A~%" attribute-label attribute-value))))
+
+(defreply print-sheeple-object ((description {description}) stream)
+  (print-unreadable-object (description stream :identity t)
+    (if (equalp (description-name description) '{anonymous})
+	(format stream "{ANONYMOUS} [~{~A~}]" (object-parents description))
+	(format stream "~A" (description-name description)))))
+
+(defreply print-sheeple-object  ((attribute =>) stream)
+  (print-unreadable-object (attribute stream :identity t)
+    (format stream "~A : ~A"
+	    (attribute-name attribute)
+	    (object-nickname attribute))))

@@ -1,5 +1,6 @@
 * MOP for descriptions in defclass:
 
+```lisp
 (defclass person ()
   ((id :accessor id)
    (username :initarg :username
@@ -48,16 +49,18 @@
 	     :view nil
 	     :serialize nil))
    (:attribute-type (=>validated =>view =>serialized)))
+```
 
 * Attributes composition at definition
 
+```lisp
 (define-description {person}
    ((fullname (=>string =>validated =>view)
        :validate t
        :required t
        :view t
        :label "Full name")))
-
+```
 * Descriptions of descriptions (meta described descriptions)
 
 * Unit tests

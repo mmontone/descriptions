@@ -4,19 +4,23 @@
   ((id :accessor id)
    (username :initarg :username
 	     :accessor username
+	     :type =>string
 	     :view t
 	     :serialize t
 	     :required t)
    (email :initarg :email
           :accessor email
+	  :type =>email
 	  :validate t
 	  :serialize t
 	  :required t)
    (fullname :initarg :fullname
              :accessor fullname
+	     :type =>string
 	     :required t)
    (password :initarg :password
 	     :accessor password
+	     :type =>password
 	     :view nil
 	     :serialize nil))
   (:metaclass described-class)
@@ -53,6 +57,8 @@
        :required t
        :view t
        :label "Full name")))
+
+* Descriptions of descriptions (meta described descriptions)
 
 * Unit tests
 

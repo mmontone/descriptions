@@ -19,5 +19,9 @@
 	   #:=>integer
 	   #:=>email
 	   #:=>password
-	   #:=>view	   
+	   #:=>view
+	   #:=>single-option
+	   #:=>multiple-option
+	   #:=>to-many-relation
+	   #:=>to-one-relation
 	   #:display-object))

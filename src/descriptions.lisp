@@ -120,6 +120,30 @@
   ()
   :documentation "Boolean attribute")
 
+(define-attribute =>reference (=>valued)
+  ((reference nil :accessor attribute-reference)))
+
+(define-attribute =>option (=>reference)
+  ((options nil :accessor attribute-options)
+   (sorted nil :accessor attribute-sorted)
+   (sorter nil :accessor attribute-sorter)))
+
+(define-attribute =>single-option (=>option)
+  ())
+
+(define-attribute =>multiple-option (=>option)
+  ())
+
+(define-attribute =>relation (=>reference)
+  ())
+
+(define-attribute =>to-many-relation (=>relation)
+  ((sorted nil :accessor attribute-sorted)
+   (sorter nil :accessor attribute-sorter)))
+
+(define-attribute =>to-one-relation (=>relation)
+  ())
+
 ;; Descriptions
 
 (defproto {description} ()

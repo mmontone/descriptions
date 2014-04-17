@@ -175,7 +175,14 @@ We can also choose not to compose descriptions, but work with them separately on
 Implementation
 --------------
 
-**{} descriptions** is implemented as a thin layer over [Sheeple](http://www.cliki.net/sheeple) prototypes
+**{} descriptions** is implemented as a thin layer over [Sheeple](http://www.cliki.net/sheeple) prototypes. As a consequence, descriptions and its attributes can be easily be combined in run time.
+
+Why not just use metaclasses instead?
+-------------------------------------
+
+It is not possible to achieve quite the same with metaclasses. They do not allow to keep the metamodel independent of the actual implementation of the class. It should be possible to exchange descriptions on the fly, and even use multiple descriptions at the same time for the same underlying domain object.
+
+Metaclasses have their own specific power though, and may be good to use them in combination with descriptions.
 
 References
 ----------

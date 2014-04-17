@@ -70,12 +70,15 @@
 				      `(:writer ',writer))
 			      ,@(when accessor
 				      `(:accessor ',accessor))))))
-    `(defproto ,name ,(if parents
+    `(progn
+       (defproto ,name ,(if parents
 			  parents
 			  (list '=>))
        ,(loop for property in properties
 	   collect (parse-attribute-property property))
-       ,@options)))
+       ,@options)
+       (defun ,name (&rest property-values)
+	 (apply #'make-attribute ,name property-values)))))
 
 ;; Attributes
 

@@ -8,6 +8,13 @@ Overview
 
 It is inspired by [Smalltalk Maggrite](http://code.google.com/p/magritte-metamodel/), as well as [Lisp On Lines](http://www.cliki.net/lisp-on-lines).
 
+Documentation
+-------------
+
+[HTML documentation](http://mmontone.github.io/descriptions/doc/build/html/index.html)
+
+[PDF manual](http://mmontone.github.io/descriptions/doc/build/latex/descriptions.pdf)
+
 Install
 -------
 

@@ -17,6 +17,8 @@ It is inspired by `Smalltalk Magritte`_, as well as `Lisp On Lines`_.
    overview
    install
    getting_started
+   implementation
+   references
    api
 
 

@@ -70,3 +70,75 @@ prints::
    Full name: "Mariano Montone"
    Username: "mmontone"
    E-mail: "mariano@copyleft.no"
+
+   ### Descriptions composition
+
+Descriptions can be composed using inheritance. Multiple inheritance is supported and they are implemented on top of a prototype based object system, so they can be composed in run time on the fly.
+
+Attributes composition
+~~~~~~~~~~~~~~~~~~~~~~
+
+When inheriting from other descriptions, attributes with the same name are collapsed into one containing all the attribute properties.
+
+For example, consider the basic *{person}* description we had before. We can ask for an attribute name and type, but asking if that attribute is going to be displayed throws an error, because that attribute property does not belong to the {person} description, but the *{person-view}* description we saw before.
+
+.. code-block:: common-lisp-repl
+
+   {}> (attribute-name (get-attribute {person} 'fullname))
+   FULLNAME
+   {}> (attribute-type (get-attribute {person} 'fullname))
+   #<Object =>STRING {1005A0A0A3}>
+   {}> (attribute-view (get-attribute {person} 'fullname))
+   ;; Error
+
+
+But if we ask the same to the *{person-view}* description, we can access to all the attributes properties.
+
+.. code-block:: common-lisp-repl
+   
+   {}> (attribute-name (get-attribute {person-view} 'fullname))
+   FULLNAME
+   {}> (attribute-type (get-attribute {person-view} 'fullname))
+   #<Object =>STRING {1005A0A0A3}>
+   {}> (attribute-view (get-attribute {person-view} 'fullname))
+   T
+
+This makes the approach layered, with each description describing different aspects of the same model and extending other more basic descriptions.
+
+Descriptions composition
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+As we mentioned before, descriptions can be composed on the fly thanks to the prototype object system the library is implemented in.
+
+For example, we can create new descriptions with the *make-description* function, passing the descriptions we want to compose as parents:
+
+.. code-block:: common-lisp
+   
+   (let ((description (make-description :parents
+					(list {person-validation} {person-repl-editing}))))
+     (let ((person (make-instance 'person)))
+	 (edit-object person description)
+	 (validate-object person description)
+	 (describe person)))
+
+A prettier way of doing it is using the description name as a function:
+
+.. code-block:: common-lisp
+   
+   (let ((description ({person-validation} {person-repl-editing})))
+       (let ((person (make-instance 'person)))
+	 (edit-object person description)
+	 (validate-object person description)
+	 (describe person)))
+
+We can also choose not to compose descriptions, but work with them separately on the different aspects of the model objects:
+
+.. code-block:: common-lisp
+   
+   (let ((person (make-instance 'person)))
+     (edit-object person {person-repl-editing})
+     (validate-object person {person-validation})
+     (describe person)
+     (print
+      (with-output-to-string (s)
+	(serialize-object person {person-serialization} s))))

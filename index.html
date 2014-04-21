@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>{} descriptions by mmontone</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>{} descriptions</h1>
+        <p>Meta level descriptions library for Common Lisp</p>
+
+        <p class="view"><a href="https://github.com/mmontone/descriptions">View the Project on GitHub <small>mmontone/descriptions</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mmontone/descriptions/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mmontone/descriptions/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mmontone/descriptions">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="-descriptions" class="anchor" href="#-descriptions"><span class="octicon octicon-link"></span></a>{} descriptions</h1>
+
+<h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<p><strong>{} descriptions</strong> is a meta level descriptions library for Common Lisp.</p>
+
+<p>It is inspired by <a href="http://code.google.com/p/magritte-metamodel/">Smalltalk Maggrite</a>, as well as <a href="http://www.cliki.net/lisp-on-lines">Lisp On Lines</a>.</p>
+
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h2>
+
+<p>Download the source code from <a href="https://github.com/mmontone/descriptions">https://github.com/mmontone/descriptions</a> and point <code>.asd</code> system definition files from <code>./sbcl/system (ln -s &lt;system definition file path&gt;)</code> and then evaluate:</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="nb">require</span> <span class="ss">:descriptions</span><span class="p">)</span>
+</pre></div>
+
+<p>from your lisp listener. </p>
+
+<p>You will also need to satisfy these system dependencies:</p>
+
+<ul>
+<li><code>alexandria</code></li>
+<li><code>anaphora</code></li>
+<li><code>sheeple</code></li>
+<li>
+<code>cxml</code> and <code>cl-json</code> for the serialization module</li>
+<li>
+<code>cl-ppcre</code> for the validation module</li>
+</ul><p>The easiest way of installing those packages is via <a href="http://www.quicklisp.org/">Quicklisp</a>.</p>
+
+<p>This library is under the MIT licence.</p>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h2>
+
+<p><strong>{} descriptions</strong> is a very dynamic meta-description library similar to <a href="http://code.google.com/p/magritte-metamodel/">Smalltalk Maggrite</a> and <a href="http://www.cliki.net/lisp-on-lines">Lisp On Lines</a>. Meta description of the application's domain model is done defining descriptions for the different aspects is desired to represent. This helps automate the generation of different views, editors, serialization schemas, validation procedures for the domain model objects and to avoid very repetitive and error-prone work when those objects change its shape.</p>
+
+<p>Domain model meta descriptions consist of the definition of description objects for its different aspects (viewing, editing, validation, persistence, serialization, etc). Description objects are a collections of attributes, can inherit from each other, and are composable.</p>
+
+<p>Let's go through an example to see how this works.</p>
+
+<p>Say we have a <em>person</em> model object:</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="nb">defclass</span> <span class="nv">person</span> <span class="p">()</span>
+  <span class="p">((</span><span class="nv">id</span> <span class="ss">:accessor</span> <span class="nv">id</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">username</span> <span class="ss">:initarg</span> <span class="ss">:username</span>
+         <span class="ss">:accessor</span> <span class="nv">username</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">fullname</span> <span class="ss">:initarg</span> <span class="ss">:fullname</span>
+             <span class="ss">:accessor</span> <span class="nv">fullname</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">email</span> <span class="ss">:initarg</span> <span class="ss">:email</span>
+          <span class="ss">:accessor</span> <span class="nv">email</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">password</span> <span class="ss">:initarg</span> <span class="ss">:password</span>
+         <span class="ss">:accessor</span> <span class="nv">password</span><span class="p">)))</span>
+</pre></div>
+
+<p>We would like to print instances of that model on the screen. So first we define a <em>{person}</em> description that just describes which attributes <em>person</em> model objecs possess and their "types".</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="nv">define-description</span> <span class="nv">{person}</span> <span class="p">()</span>
+  <span class="p">((</span><span class="nv">username</span> <span class="nv">=&gt;string</span>
+         <span class="ss">:reader</span> <span class="nf">#'</span><span class="nv">username</span>
+         <span class="ss">:writer</span> <span class="nf">#'</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">username</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">email</span> <span class="nv">=&gt;email</span>
+      <span class="ss">:reader</span> <span class="nf">#'</span><span class="nv">email</span>
+      <span class="ss">:writer</span> <span class="nf">#'</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">email</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">fullname</span> <span class="nv">=&gt;string</span>
+         <span class="ss">:reader</span> <span class="nf">#'</span><span class="nv">fullname</span>
+         <span class="ss">:writer</span> <span class="nf">#'</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">fullname</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">password</span> <span class="nv">=&gt;password</span>
+         <span class="ss">:reader</span> <span class="nf">#'</span><span class="nv">password</span>
+         <span class="ss">:writer</span> <span class="nf">#'</span><span class="p">(</span><span class="nb">setf</span> <span class="nv">password</span><span class="p">)))</span>
+  <span class="ss">:documentation</span> <span class="s">"A person description"</span><span class="p">)</span>
+</pre></div>
+
+<p>Descriptions names are enclosed between brackets <code>{</code> <code>}</code> as a naming convention. Also, notice that the attribute types (<code>=&gt;string</code>, <code>=&gt;email</code>, <code>=&gt;password</code>), begin with <code>=&gt;</code>. Attributes types begin with <code>=&gt;</code> as a naming convention.</p>
+
+<p>Now we can use the information on the attributes of a person, and its types, to print a description of a person on the screen. To do that we define a new description that indicates which person slots we would like to print, and in which order.</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="nv">define-description</span> <span class="nv">{person-view}</span> <span class="p">(</span><span class="nv">{person}</span><span class="p">)</span>
+  <span class="p">((</span><span class="nv">fullname</span> <span class="nv">=&gt;view</span> <span class="ss">:label</span> <span class="s">"Full name"</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">username</span> <span class="nv">=&gt;view</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">email</span> <span class="nv">=&gt;view</span> <span class="ss">:label</span> <span class="s">"E-mail"</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">password</span> <span class="nv">=&gt;view</span> <span class="ss">:view</span> <span class="no">nil</span><span class="p">)))</span>
+</pre></div>
+
+<p>We can see that the password is disabled for viewing, that "Full name" and "E-mail" are used for labels, and that fullname, username, email and password are to be displayed in that order.</p>
+
+<p>We can see that in action:</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="nv">display-object</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'person</span> <span class="ss">:username</span> <span class="s">"mmontone"</span>
+                   <span class="ss">:email</span> <span class="s">"mariano@copyleft.no"</span>
+                   <span class="ss">:password</span> <span class="s">"lalala"</span>
+                   <span class="ss">:fullname</span> <span class="s">"Mariano Montone"</span><span class="p">)</span>
+        <span class="nv">{person-view}</span><span class="p">)</span>
+</pre></div>
+
+<p>prints:</p>
+
+<pre><code>Full name: "Mariano Montone"
+Username: "mmontone"
+E-mail: "mariano@copyleft.no"
+
+</code></pre>
+
+<h3>
+<a name="descriptions-composition" class="anchor" href="#descriptions-composition"><span class="octicon octicon-link"></span></a>Descriptions composition</h3>
+
+<p>Descriptions can be composed using inheritance. Multiple inheritance is supported and they are implemented on top of a prototype based object system, so they can be composed in run time on the fly.</p>
+
+<h4>
+<a name="attributes-composition" class="anchor" href="#attributes-composition"><span class="octicon octicon-link"></span></a>Attributes composition</h4>
+
+<p>When inheriting from other descriptions, attributes with the same name are collapsed into one containing all the attribute properties.</p>
+
+<p>For example, consider the basic <em>{person}</em> description we had before. We can ask for an attribute name and type, but asking if that attribute is going to be displayed throws an error, because that attribute property does not belong to the {person} description, but the <em>{person-view}</em> description we saw before.</p>
+
+<div class="highlight highlight-lisp"><pre><span class="nv">{}&gt;</span> <span class="p">(</span><span class="nv">attribute-name</span> <span class="p">(</span><span class="nv">get-attribute</span> <span class="nv">{person}</span> <span class="ss">'fullname</span><span class="p">))</span>
+<span class="nv">FULLNAME</span>
+<span class="nv">{}&gt;</span> <span class="p">(</span><span class="nv">attribute-type</span> <span class="p">(</span><span class="nv">get-attribute</span> <span class="nv">{person}</span> <span class="ss">'fullname</span><span class="p">))</span>
+<span class="err">#</span><span class="nv">&lt;Object</span> <span class="nv">=&gt;STRING</span> <span class="nv">{1005A0A0A3}&gt;</span>
+<span class="nv">{}&gt;</span> <span class="p">(</span><span class="nv">attribute-view</span> <span class="p">(</span><span class="nv">get-attribute</span> <span class="nv">{person}</span> <span class="ss">'fullname</span><span class="p">))</span>
+<span class="c1">;; Error</span>
+</pre></div>
+
+<p>But if we ask the same to the <em>{person-view}</em> description, we can access to all the attributes properties.</p>
+
+<div class="highlight highlight-lisp"><pre><span class="nv">{}&gt;</span> <span class="p">(</span><span class="nv">attribute-name</span> <span class="p">(</span><span class="nv">get-attribute</span> <span class="nv">{person-view}</span> <span class="ss">'fullname</span><span class="p">))</span>
+<span class="nv">FULLNAME</span>
+<span class="nv">{}&gt;</span> <span class="p">(</span><span class="nv">attribute-type</span> <span class="p">(</span><span class="nv">get-attribute</span> <span class="nv">{person-view}</span> <span class="ss">'fullname</span><span class="p">))</span>
+<span class="err">#</span><span class="nv">&lt;Object</span> <span class="nv">=&gt;STRING</span> <span class="nv">{1005A0A0A3}&gt;</span>
+<span class="nv">{}&gt;</span> <span class="p">(</span><span class="nv">attribute-view</span> <span class="p">(</span><span class="nv">get-attribute</span> <span class="nv">{person-view}</span> <span class="ss">'fullname</span><span class="p">))</span>
+<span class="no">T</span>
+</pre></div>
+
+<p>This makes the approach layered, with each description describing different aspects of the same model and extending other more basic descriptions.</p>
+
+<h4>
+<a name="descriptions-composition-1" class="anchor" href="#descriptions-composition-1"><span class="octicon octicon-link"></span></a>Descriptions composition</h4>
+
+<p>As we mentioned before, descriptions can be composed on the fly thanks to the prototype object system the library is implemented in.</p>
+
+<p>For example, we can create new descriptions with the <em>make-description</em> function, passing the descriptions we want to compose as parents:</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">description</span> <span class="p">(</span><span class="nv">make-description</span> <span class="ss">:parents</span>
+                     <span class="p">(</span><span class="nb">list</span> <span class="nv">{person-validation}</span> <span class="nv">{person-repl-editing}</span><span class="p">))))</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">person</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'person</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">edit-object</span> <span class="nv">person</span> <span class="nv">description</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">validate-object</span> <span class="nv">person</span> <span class="nv">description</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">describe</span> <span class="nv">person</span><span class="p">)))</span>
+</pre></div>
+
+<p>A prettier way of doing it is using the description name as a function:</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">description</span> <span class="p">(</span><span class="nv">{person-validation}</span> <span class="nv">{person-repl-editing}</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">person</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'person</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">edit-object</span> <span class="nv">person</span> <span class="nv">description</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">validate-object</span> <span class="nv">person</span> <span class="nv">description</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">describe</span> <span class="nv">person</span><span class="p">)))</span>
+</pre></div>
+
+<p>We can also choose not to compose descriptions, but work with them separately on the different aspects of the model objects:</p>
+
+<div class="highlight highlight-lisp"><pre><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">person</span> <span class="p">(</span><span class="nb">make-instance</span> <span class="ss">'person</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">edit-object</span> <span class="nv">person</span> <span class="nv">{person-repl-editing}</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">validate-object</span> <span class="nv">person</span> <span class="nv">{person-validation}</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">describe</span> <span class="nv">person</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">print</span>
+   <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">serialize-object</span> <span class="nv">person</span> <span class="nv">{person-serialization}</span> <span class="nv">s</span><span class="p">))))</span>
+
+</pre></div>
+
+<h2>
+<a name="implementation" class="anchor" href="#implementation"><span class="octicon octicon-link"></span></a>Implementation</h2>
+
+<p><strong>{} descriptions</strong> is implemented as a thin layer over <a href="http://www.cliki.net/sheeple">Sheeple</a> prototypes. As a consequence, descriptions and its attributes can be easily be combined in run time.</p>
+
+<h3>
+<a name="why-not-just-use-metaclasses-instead" class="anchor" href="#why-not-just-use-metaclasses-instead"><span class="octicon octicon-link"></span></a>Why not just use metaclasses instead?</h3>
+
+<p>It is not possible to achieve quite the same with metaclasses. They do not allow to keep the metamodel independent of the actual implementation of the class. It should be possible to exchange descriptions on the fly, and even use multiple descriptions at the same time for the same underlying domain object.</p>
+
+<p>Metaclasses have their own specific power though, and may be good to use them in combination with descriptions.</p>
+
+<h2>
+<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References</h2>
+
+<ul>
+<li><a href="http://code.google.com/p/magritte-metamodel/">http://code.google.com/p/magritte-metamodel/</a></li>
+<li><a href="http://www.cliki.net/lisp-on-lines">http://www.cliki.net/lisp-on-lines</a></li>
+<li><a href="http://common-lisp.net/project/lisp-on-lines/repo/lisp-on-lines/doc/manual.html">http://common-lisp.net/project/lisp-on-lines/repo/lisp-on-lines/doc/manual.html</a></li>
+<li><a href="http://scg.unibe.ch/archive/papers/Reng07aMagritte.pdf">http://scg.unibe.ch/archive/papers/Reng07aMagritte.pdf</a></li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mmontone">mmontone</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>

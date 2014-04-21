@@ -37,9 +37,14 @@
 		(loop for attribute in attributes
 		   collect (list (first attribute) (parse-description-attribute attribute) :accessor nil)))
 	 ,@options)
+       
+       ,(when (getf options :documentation)
+	      `(setf (documentation ',name 'variable)
+		     ,(getf options :documentation)))
 
        ;; A description builder function
        (defun ,name (&rest parents)
+	 ,(format nil "Create a ~A description. Takes a list of descriptions to use as parents of the new description." name)
 	 (make-description :parents (or parents
 					,(if parents
 					     `(list ,@parents)
@@ -91,7 +96,11 @@
        ,(loop for property in properties
 	   collect (parse-attribute-property property))
        ,@options)
+       ,(when (getf options :documentation)
+	      `(setf (documentation ',name 'variable)
+		     ,(getf options :documentation)))
        (defun ,name (&rest property-values)
+	 ,(format nil "Create a ~A attribute. Takes a plist of property values for the created attribute" name)
 	 (apply #'make-attribute ,name property-values)))))
 
 ;; Attributes

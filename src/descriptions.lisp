@@ -3,6 +3,8 @@
 ;; Syntax and api
 
 (defun make-attribute (attribute-type &rest property-values)
+  "Create an attribute."
+  
   (flet ((plist-to-properties (property-values)
 	   (loop
 	      for prop in property-values by #'cddr
@@ -18,6 +20,7 @@
 			      (plist-to-properties property-values)))))
 
 (defmacro define-description (name parents attributes &rest options)
+  "Define a new description"
   (flet ((parse-description-attribute (attribute-spec)
 	   (destructuring-bind (attribute-name
 				attribute-type
@@ -46,7 +49,10 @@
 				      for attribute in attributes
 				      collect `(list ',(first attribute)
 						     ,(parse-description-attribute attribute)))))))))
+
 (defun description-attributes (description)
+  "Obtain a description attributes.
+:param description: the description."
   (mapcar (lambda (prop)
             (get-attribute description prop))
           (remove-if (lambda (prop)
@@ -54,12 +60,20 @@
                      (available-properties description))))
 
 (defmacro with-description-attributes (attributes description &body body)
+  "Run body with description attributes bound"
   `(let ,(loop for attribute in attributes
 	      collect
 	      (list attribute `(get-attribute ,description ',attribute)))
      ,@body))
 
 (defmacro define-attribute (name parents properties &rest options)
+  "Define an attribute type
+
+:param name: the attribute type name.
+:param parents: the attribute type parents.
+:param properties: list of properties.
+:param options: options, like :documentation, etc"
+  
   (flet ((parse-attribute-property (property-spec)
 	   (destructuring-bind (property-name property-value &key reader writer accessor)
 	       property-spec

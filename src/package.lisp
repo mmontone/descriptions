@@ -7,6 +7,7 @@
 	   #:add-attribute
 	   #:get-attribute
 	   #:description-attributes
+	   #:description-name
 	   #:with-description-attributes
 	   #:define-attribute
 	   #:make-attribute
@@ -24,4 +25,19 @@
 	   #:=>multiple-option
 	   #:=>to-many-relation
 	   #:=>to-one-relation
-	   #:display-object))
+	   #:display-object
+
+	   ;; Attributes accessors
+	   #:attribute-name
+	   #:attribute-type
+	   #:attribute-value
+	   #:attribute-reader
+	   #:attribute-writer
+	   #:attribute-serialize
+	   #:attribute-reference
+	   #:attribute-sorted
+	   #:attribute-sorter
+	   #:attribute-options
+	   #:attribute-label
+	   #:attribute-view
+	   #:attribute-formatter))

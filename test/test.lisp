@@ -48,9 +48,8 @@
 			       :fullname "John Nash"
 			       :email "johnnash@gmail.com"
 			       :password "123456")))
-  (with-described-object (username email fullname password)
-      {person}
-      person
+    (with-described-object (username email fullname password)
+	(person {person})
       (is (equalp username "johnnash"))
       (is (equalp fullname "John Nash"))
       (is (equalp email "johnnash@gmail.com"))
@@ -116,3 +115,30 @@
     (is (equalp (attribute-view (get-attribute composed-description 'password)) nil))
     (is (equalp (attribute-serialize (get-attribute composed-description 'fullname)) t))
     (is (equalp (attribute-serialize (get-attribute composed-description 'password)) nil))))
+
+
+(defclass user ()
+  ((id :accessor id
+       :described-p nil)
+   (username :initarg :username
+	     :accessor username
+	     :attribute-type =>string)
+   (fullname :initarg :fullname
+             :accessor fullname
+	     :attribute-type (=> (=>view =>string) :view t))
+   (email :initarg :email
+          :accessor email
+	  :attribute-type =>email)
+   (password :initarg :password
+	     :accessor password
+	     :attribute-type =>password))
+  (:metaclass described-object-class))
+
+(let ((user (make-instance 'user)))
+  (description-attributes
+   (default-description user))
+  (display-object user))
+
+(closer-mop:class-direct-slots (find-class 'user))
+
+(=> (=>string =>view) :view t)

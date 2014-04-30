@@ -7,9 +7,11 @@
   :license "MIT"
   :depends-on (#:alexandria
                #:anaphora
-               #:sheeple)
+               #:sheeple
+	       #:closer-mop)
   :components ((:module src
 			:components
 			((:file "package")
-			 (:file "descriptions"))
+			 (:file "descriptions")
+			 (:file "mop"))
 			:serial t)))

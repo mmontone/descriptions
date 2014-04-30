@@ -48,7 +48,7 @@
 		(list attribute `(get-attribute ,description ',attribute)))
        ,@body))
 
-  (defmacro with-described-object (attributes description object &body body)
+  (defmacro with-described-object (attributes (object &optional (description (default-description object))) &body body)
     `(let ,(loop for attribute in attributes
 		collect (list attribute `(funcall (attribute-reader
 						   (get-attribute ,description ',attribute)) ,object)))
@@ -86,6 +86,12 @@
 	 (defun ,name (&rest property-values)
 	   ,(format nil "Create a ~A attribute. Takes a plist of property values for the created attribute" name)
 	   (apply #'make-attribute ,name property-values)))))
+
+  (defmacro => (type-spec &rest property-values)
+    "Attribute builder macro"
+    (if (listp type-spec)
+	`(make-attribute (list ,@type-spec) ,@property-values)
+	`(make-attribute ,type-spec ,@property-values)))
   )
 
 (defun make-attribute (attribute-type &rest property-values)
@@ -213,7 +219,8 @@
    (view t :accessor attribute-view)
    (formatter #'prin1-to-string :accessor attribute-formatter))) 
 
-(defun display-object (object description &optional (stream t))
+(defun display-object (object &optional (description (default-description object))
+				(stream t))
   (loop for attribute in (description-attributes description)
        when (and (descendantp attribute =>view)
 		 (attribute-view attribute))

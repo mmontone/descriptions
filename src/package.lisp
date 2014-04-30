@@ -9,6 +9,9 @@
 	   #:description-attributes
 	   #:description-name
 	   #:with-description-attributes
+	   #:described-object
+	   #:described-object-class
+	   #:default-description
 	   #:with-described-object
 	   #:define-attribute
 	   #:make-attribute
@@ -27,6 +30,7 @@
 	   #:=>to-many-relation
 	   #:=>to-one-relation
 	   #:display-object
+	   #:attribute
 
 	   ;; Attributes accessors
 	   #:attribute-name

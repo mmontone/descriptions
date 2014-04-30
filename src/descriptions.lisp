@@ -48,6 +48,12 @@
 		(list attribute `(get-attribute ,description ',attribute)))
        ,@body))
 
+  (defmacro with-described-object (attributes description object &body body)
+    `(let ,(loop for attribute in attributes
+		collect (list attribute `(funcall (attribute-reader
+						   (get-attribute ,description ',attribute)) ,object)))
+       ,@body))
+
   (defmacro define-attribute (name parents properties &rest options)
     "Define an attribute type
 
@@ -95,7 +101,7 @@
       (object :parents (if (listp attribute-type)
 			   attribute-type
 			   (list attribute-type))
-	      :properties (cons (list 'type attribute-type)
+	      :properties (cons (list :type attribute-type)
 				(plist-properties property-values)))))
 
 (defun description-attributes (description)
@@ -109,10 +115,10 @@
 
 ;; Attributes
 
-(DEFPROTO => ()
-  ((NAME NIL :ACCESSOR 'ATTRIBUTE-NAME)
-   (TYPE 'ATTRIBUTE :ACCESSOR 'ATTRIBUTE-TYPE))
-  :DOCUMENTATION "An attribute")
+(defproto => ()
+  ((:name nil :accessor 'attribute-name)
+   (:type 'attribute :accessor 'attribute-type))
+  :documentation "Top level attribute")
 
 (defun attribute-properties (attribute)
   (remove-if (lambda (property-name)

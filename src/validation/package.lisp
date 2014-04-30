@@ -6,4 +6,7 @@
 	   #:=>validatable-string
 	   #:=>validatable-number
 	   #:=>validatable-password
-	   #:=>validatable-email))
+	   #:=>validatable-email
+	   #:attribute-validator
+	   #:attribute-validate
+	   #:attribute-required))

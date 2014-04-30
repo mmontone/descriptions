@@ -2,4 +2,7 @@
   (:nicknames :{}.serialization)
   (:use :cl :{})
   (:export #:serialize-object
-	   #:=>serializable))
+	   #:=>serializable
+	   #:attribute-serialize
+	   #:attribute-serialization-name
+	   #:attribute-serializer))

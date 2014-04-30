@@ -9,6 +9,7 @@
 	   #:description-attributes
 	   #:description-name
 	   #:with-description-attributes
+	   #:with-described-object
 	   #:define-attribute
 	   #:make-attribute
 	   #:=>

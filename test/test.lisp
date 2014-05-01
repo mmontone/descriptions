@@ -117,26 +117,24 @@
     (is (equalp (attribute-serialize (get-attribute composed-description 'password)) nil))))
 
 
-(defclass user ()
+(define-described-class user ()
   ((id :accessor id
        :described-p nil)
    (username :initarg :username
 	     :accessor username
-	     :attribute-type (=>string :reader #'username))
+	     :type string)
    (fullname :initarg :fullname
              :accessor fullname
-	     :attribute-type (=> (=>view =>string)
-				 :reader #'fullname
-				 :view t))
+	     :type string
+	     :attribute-type (=>view =>string)
+	     :view t)
    (email :initarg :email
           :accessor email
-	  :attribute-type (=> (=>view =>email)
-			      :reader #'email
-			      :view t))
+	  :attribute-type (=>view =>email)
+	  :view t)
    (password :initarg :password
 	     :accessor password
-	     :attribute-type (=>password :reader #'password)))
-  (:metaclass described-object-class))
+	     :attribute-type =>password)))
 
 (let ((user (make-instance 'user
 			   :username "mmontone"

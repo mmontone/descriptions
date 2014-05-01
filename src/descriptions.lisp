@@ -79,10 +79,13 @@
 			      (list '=>))
 	   ,(loop for property in properties
 	       collect (parse-attribute-property property))
-	   ,@options)
+	   ,@(remove-from-plist options :alias))
 	 ,(when (getf options :documentation)
 		`(setf (documentation ',name 'variable)
 		       ,(getf options :documentation)))
+	 ,(when (getf options :alias)
+		`(setf (get ',(getf options :alias) :attribute-alias)
+		       ',name))
 	 (defun ,name (&rest property-values)
 	   ,(format nil "Create a ~A attribute. Takes a plist of property values for the created attribute" name)
 	   (apply #'make-attribute ,name property-values)))))
@@ -141,23 +144,28 @@
 
 (define-attribute =>string (=>valued)
   ()
-  :documentation "String attribute")
+  :documentation "String attribute"
+  :alias string)
 
 (define-attribute =>email (=>valued)
   ()
-  :documentation "Email attribute")
+  :documentation "Email attribute"
+  :alias email)
 
 (define-attribute =>password (=>valued)
   ((serialize nil :accessor attribute-serialize))
-  :documentation "Password attribute")
+  :documentation "Password attribute"
+  :alias password)
 
 (define-attribute =>integer (=>valued)
   ()
-  :documentation "Integer attribute")
+  :documentation "Integer attribute"
+  :alias integer)
 
 (define-attribute =>boolean (=>valued)
   ()
-  :documentation "Boolean attribute")
+  :documentation "Boolean attribute"
+  :alias boolean)
 
 (define-attribute =>reference (=>valued)
   ((reference nil :accessor attribute-reference)))

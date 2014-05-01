@@ -11,6 +11,7 @@
 	   #:with-description-attributes
 	   #:described-object
 	   #:described-object-class
+	   #:define-described-class
 	   #:default-description
 	   #:with-described-object
 	   #:define-attribute

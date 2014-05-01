@@ -100,14 +100,22 @@
 	     when (described-p slot)
 	     collect
 	       (let ((attribute-name (or (slot-attribute-name slot)
-					 (closer-mop:slot-definition-name slot))))
-		 (break "Readers: ~A writers: ~A" (closer-mop:slot-definition-readers slot)
-			(closer-mop:slot-definition-writers slot))
+					 (closer-mop:slot-definition-name slot)))
+		     (attribute (eval (slot-attribute-type slot))))
+		 (setf (attribute-name attribute)
+		       attribute-name)
+		 ;; We want to set readers and writers here too
+		 ;; But I don't know how to do it at the moment,
+		 ;; closer-mop:slot-definition-readers and
+		 ;; closer-mop:slot-definition-writers is not giving anything useful
+		 
+		 ;; (setf (attribute-reader attribute)
+		 ;;       (first (closer-mop:slot-definition-readers slot)))
+		 ;; (setf (attribute-writer attribute)
+		 ;;       (first (closer-mop:slot-definition-writers slot)))
+		 
 		 (list attribute-name
-		       (make-attribute (eval (slot-attribute-type slot))
-				       :name attribute-name
-				       :reader (closer-mop:slot-definition-readers slot)
-				       :writer (closer-mop:slot-definition-writers slot))))))))
+		       attribute))))))
     (setf (default-description obj)
 	  (make-description :parents description-parents
 			    :attributes description-attributes))))

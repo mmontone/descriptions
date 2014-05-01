@@ -5,10 +5,11 @@
    (serializer nil :accessor attribute-serializer)
    (serialization-name nil :accessor attribute-serialization-name)))
 
-(defun serialize-object (object description &optional (stream json:*json-output*))
+(defun serialize-object (object &optional (description (default-description object))
+				  (stream json:*json-output*))
   (json:with-object (stream)
     (loop for attribute in (description-attributes description)
-       when (and (descendantp attribute =>serializable)
+       when (and (sheeple:descendantp attribute =>serializable)
 		 (attribute-serialize attribute))
        do (let ((serialization-name (or (attribute-serialization-name attribute)
 					(string-downcase (symbol-name (attribute-name attribute)))))

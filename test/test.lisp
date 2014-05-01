@@ -122,23 +122,28 @@
        :described-p nil)
    (username :initarg :username
 	     :accessor username
-	     :attribute-type =>string)
+	     :attribute-type (=>string :reader #'username))
    (fullname :initarg :fullname
              :accessor fullname
-	     :attribute-type (=> (=>view =>string) :view t))
+	     :attribute-type (=> (=>view =>string)
+				 :reader #'fullname
+				 :view t))
    (email :initarg :email
           :accessor email
-	  :attribute-type =>email)
+	  :attribute-type (=> (=>view =>email)
+			      :reader #'email
+			      :view t))
    (password :initarg :password
 	     :accessor password
-	     :attribute-type =>password))
+	     :attribute-type (=>password :reader #'password)))
   (:metaclass described-object-class))
 
-(let ((user (make-instance 'user)))
+(let ((user (make-instance 'user
+			   :username "mmontone"
+			   :password "123456"
+			   :fullname "Mariano Montone"
+			   :email "marianomontone@gmail.com"
+			   )))
   (description-attributes
    (default-description user))
   (display-object user))
-
-(closer-mop:class-direct-slots (find-class 'user))
-
-(=> (=>string =>view) :view t)

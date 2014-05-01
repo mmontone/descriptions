@@ -25,9 +25,9 @@
 (define-attribute =>validatable-email (=>validatable =>email)
   ((validator #'valid-email-address-p)))
 
-(defun validate-object (object description)
+(defun validate-object (object &optional (description (default-description object)))
   (loop for attribute in (description-attributes description)
-       when (and (descendantp attribute =>validatable)
+       when (and (sheeple:descendantp attribute =>validatable)
 		 (attribute-validate attribute))
        do (progn
 	    ;(format t "Validating ~A~%" (attribute-name attribute))

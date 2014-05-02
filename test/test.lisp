@@ -151,8 +151,8 @@
 			   :password "123456"
 			   :fullname "Mariano Montone"
 			   :email "marianomontone@gmail.com"
-			   :sex :male
-			   )))
+			   :sex :male)))
   (description-attributes
    (default-description user))
+  (validate-object user)
   (display-object user))

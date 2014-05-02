@@ -5,6 +5,10 @@
    (validator nil :accessor attribute-validator)
    (required nil :accessor attribute-required)))
 
+(defreply attribute-validator ((attribute =>string))
+  (lambda (thing)
+    (stringp thing)))
+
 (define-attribute =>validatable-string (=>validatable =>string)
   ((validator (lambda (thing)
 		(stringp thing)))))
@@ -22,8 +26,15 @@
   (not (null
 	(ppcre:scan "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$" string))))
 
+(defreply attribute-validator ((attribute =>email))
+  #'valid-email-address-p)
+
 (define-attribute =>validatable-email (=>validatable =>email)
   ((validator #'valid-email-address-p)))
+
+(defreply attribute-validator ((attribute =>single-option))
+  (lambda (val)
+    (member val (attribute-options attribute))))
 
 (defun validate-object (object &optional (description (default-description object)))
   (loop for attribute in (description-attributes description)

@@ -1,6 +1,6 @@
 (defpackage :descriptions.validation
   (:nicknames :{}.validation)
-  (:use :cl :{})
+  (:use :cl :{} :sheeple :alexandria)
   (:export #:validate-object
 	   #:=>validatable
 	   #:=>validatable-string

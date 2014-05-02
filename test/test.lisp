@@ -126,15 +126,18 @@
    (fullname :initarg :fullname
              :accessor fullname
 	     :type string
-	     :attribute-type (=>view =>string)
+	     :attribute-type =>string
 	     :view t)
    (email :initarg :email
           :accessor email
-	  :attribute-type (=>view =>email)
+	  :attribute-type =>email
 	  :view t)
    (password :initarg :password
 	     :accessor password
-	     :attribute-type =>password)))
+	     :attribute-type =>password
+	     :view nil))
+  (:base-attribute-type (=>view =>serializable =>validatable))
+  (:documentation "A user"))
 
 (let ((user (make-instance 'user
 			   :username "mmontone"

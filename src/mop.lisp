@@ -121,7 +121,10 @@
 	       :initarg
 	       :documentation
 	       :type
-	       :described-p)))
+	       :described-p))
+	(base-attribute-type (loop for option in options
+				when (equalp (first option) :base-attribute-type)
+				return (second option))))
     (flet ((collect-attribute-args (args)
 	     (loop for arg in args by #'cddr
 		for value in (cdr args) by #'cddr
@@ -130,8 +133,8 @@
 		appending (list arg value))))
       `(defclass ,name ,direct-superclasses
 	 ,(loop for slot in direct-slots
-	       for slot-name = (first slot)
-	       for slot-args = (cdr slot)
+	     for slot-name = (first slot)
+	     for slot-args = (cdr slot)
 	     collect
 	       (let ((attribute
 		      (when (or (not (member :described-p (plist-keys slot-args)))
@@ -144,9 +147,7 @@
 			(let ((attribute-type
 			       (cond
 				 ((getf slot-args :attribute-type)
-				  (if (listp (getf slot-args :attribute-type))
-				      `(list ,@(getf slot-args :attribute-type))
-				      (getf slot-args :attribute-type)))
+				  (getf slot-args :attribute-type))
 				 ((and (getf slot-args :type)
 				       (get (getf slot-args :type) :attribute-alias))
 				  (get (getf slot-args :type) :attribute-alias))
@@ -191,7 +192,23 @@
 				(t (error "No accessor or writer specified for described slot ~A in class ~A" slot-name name))))
 
 			    ;; finally make the attribute
-			    `(make-attribute ,attribute-type ,@attr-args))))))
+			    ;; compose the attribute type with a possible base-attribute-type
+			    (let ((final-attribute-type (if base-attribute-type
+							    (if (listp base-attribute-type)
+								(if (listp attribute-type)
+								    (append attribute-type base-attribute-type)
+					;else
+								    (cons attribute-type base-attribute-type))
+					;else
+								(if (listp attribute-type)
+								    (append attribute-type (list base-attribute-type))
+								    (list attribute-type base-attribute-type)))
+					;else
+							    attribute-type)))
+			      `(make-attribute ,(if (listp final-attribute-type)
+						    `(list ,@final-attribute-type)
+						    final-attribute-type)
+					       ,@attr-args)))))))
 		 (if attribute
 		     `(,slot-name ,@(loop for arg in slot-args by #'cddr
 				       for value in (cdr slot-args) by #'cddr
@@ -200,4 +217,9 @@
 				  :attribute ,attribute)
 		     `(,slot-name ,@slot-args))))
 	 (:metaclass described-object-class)
-	 ,@options))))
+	 ,@(let ((described-object-class-options (list :base-attribute-type)))
+		(loop for option in options
+		   when (destructuring-bind (key value) option
+			  (declare (ignore value))
+			  (not (member key described-object-class-options)))
+		   collect option))))))

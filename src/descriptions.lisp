@@ -180,10 +180,18 @@
 (define-attribute =>reference (=>valued)
   ((reference nil :accessor attribute-reference)))
 
+(defreply print-sheeple-object ((attribute =>reference) stream)
+  (format stream " ref: ~A" (attribute-reference attribute))
+  (call-next-reply))
+
 (define-attribute =>option (=>reference)
   ((options nil :accessor attribute-options)
    (sorted nil :accessor attribute-sorted)
    (sorter nil :accessor attribute-sorter)))
+
+(defreply print-sheeple-object ((attribute =>option) stream)
+  (format stream " (~{~a~^, ~})" (attribute-options attribute))
+  (call-next-reply))
 
 (define-attribute =>single-option (=>option)
   ())
@@ -257,10 +265,14 @@
 	(format stream "~A" (description-name description))
 	(format stream "[~{~A~}]" (object-parents description)))))
 
-(defreply print-sheeple-object  ((attribute =>) stream)
+(defreply print-sheeple-object :around ((attribute =>) stream)
   (print-unreadable-object (attribute stream :identity t)
     (if (attribute-name attribute)
 	(format stream " ~A : ~A"
 		(attribute-name attribute)
 		(object-nickname attribute))
-	(format stream " ~A" (object-nickname attribute)))))
+	(format stream " ~A" (object-nickname attribute)))
+    (call-next-reply)))
+
+(defreply print-sheeple-object ((attribute =>) stream)
+  )

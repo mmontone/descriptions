@@ -15,7 +15,10 @@
      :accessor default-description-name)))
 
 (defclass described-object-class (standard-class)
-  ())
+  ((default-description
+       :initarg :default-description
+     :initform nil
+     :accessor default-description)))
 
 (defmethod closer-mop:validate-superclass
     ((class described-object-class)
@@ -100,9 +103,10 @@
 		 (setf (attribute-name attribute) attribute-name)
 		 (list attribute-name
 		       attribute))))))
-    (setf (default-description obj)
-	  (make-description :parents description-parents
-			    :attributes description-attributes))))
+    (let ((default-description (make-description :parents description-parents
+						 :attributes description-attributes)))
+      (setf (default-description obj) default-description)
+      (setf (default-description (class-of obj)) default-description))))
 
 (defun plist-keys (plist)
   (loop for key in plist by #'cddr

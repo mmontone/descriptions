@@ -142,6 +142,16 @@
    (reader nil :accessor attribute-reader)
    (writer nil :accessor attribute-writer)))
 
+(define-attribute =>symbol (=>valued)
+  ()
+  :documentation "Symbol attribute"
+  :alias symbol)
+
+(define-attribute =>keyword (=>valued)
+  ()
+  :documentation "Keyword attribute"
+  :alias keyword)
+
 (define-attribute =>string (=>valued)
   ()
   :documentation "String attribute"

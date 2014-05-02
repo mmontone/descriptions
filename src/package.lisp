@@ -20,6 +20,8 @@
 	   #:attribute-properties
 	   #:attribute-documentation
 	   #:=>valued
+	   #:=>symbol
+	   #:=>keyword
 	   #:=>string
 	   #:=>boolean
 	   #:=>integer

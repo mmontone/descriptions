@@ -135,7 +135,14 @@
    (password :initarg :password
 	     :accessor password
 	     :attribute-type =>password
-	     :view nil))
+	     :view nil)
+   (sex :initarg :sex
+	:accessor sex
+	:attribute-type =>single-option
+	:options (list :male :female)
+	:formatter (lambda (val)
+		     (string-capitalize (symbol-name val)))
+	:view t))
   (:base-attribute-type (=>view =>serializable =>validatable))
   (:documentation "A user"))
 
@@ -144,6 +151,7 @@
 			   :password "123456"
 			   :fullname "Mariano Montone"
 			   :email "marianomontone@gmail.com"
+			   :sex :male
 			   )))
   (description-attributes
    (default-description user))

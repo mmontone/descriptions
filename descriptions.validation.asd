@@ -3,7 +3,7 @@
   :description "The {} descriptions validation module"
   :author "Mariano Montone"
   :license "MIT"
-  :depends-on (#:descriptions #:cl-ppcre)
+  :depends-on (#:descriptions #:clavier)
   :components ((:module src
 			:components
 			((:module validation

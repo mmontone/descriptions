@@ -157,7 +157,7 @@
 
 (let ((user (make-instance 'user
 			   :username "mmontone"
-			   :password "123456"
+			   :password "1234567"
 			   :fullname "Mariano Montone"
 			   :email "marianomontone@gmail.com"
 			   :sex :male)))
@@ -168,3 +168,18 @@
   (display-object user)
   (with-output-to-string (json:*json-output*)
     (serialize-object user)))
+
+;; (let ((user (make-instance 'user
+;; 			   :username nil
+;; 			   :password "1234567"
+;; 			   :fullname "Mariano Montone"
+;; 			   :email "marianomontone.gmail.com"
+;; 			   :sex :male)))
+;;   (default-description user)
+;;   (description-attributes
+;;    (default-description user))
+;;   (validate-object user)
+;;   (display-object user)
+;;   (with-output-to-string (json:*json-output*)
+;;     (serialize-object user)))
+

@@ -127,11 +127,13 @@
              :accessor fullname
 	     :type string
 	     :attribute-type =>string
-	     :view t)
+	     :view t
+	     :serialize t)
    (email :initarg :email
           :accessor email
 	  :attribute-type =>email
-	  :view t)
+	  :view t
+	  :serialize t)
    (password :initarg :password
 	     :accessor password
 	     :attribute-type =>password
@@ -139,10 +141,17 @@
    (sex :initarg :sex
 	:accessor sex
 	:attribute-type =>single-option
+	:reference =>keyword
 	:options (list :male :female)
 	:formatter (lambda (val)
 		     (string-capitalize (symbol-name val)))
-	:view t))
+	:view t)
+   (friends :initarg :friends
+	    :accessor friends
+	    :initform nil
+	    :attribute-type =>to-many-relation
+	    :reference (default-description (find-class 'user))
+	    ))
   (:base-attribute-type (=>view =>serializable =>validatable))
   (:documentation "A user"))
 
@@ -152,7 +161,10 @@
 			   :fullname "Mariano Montone"
 			   :email "marianomontone@gmail.com"
 			   :sex :male)))
+  (default-description user)
   (description-attributes
    (default-description user))
   (validate-object user)
-  (display-object user))
+  (display-object user)
+  (with-output-to-string (json:*json-output*)
+    (serialize-object user)))

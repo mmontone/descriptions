@@ -217,8 +217,7 @@
 (defun make-description (&key parents attributes)
   (object
    :parents parents
-   :properties (cons (list 'description-name '{anonymous})
-		     attributes)))
+   :properties attributes))
 
 ;; Displaying
 
@@ -244,12 +243,14 @@
 
 (defreply print-sheeple-object ((description {description}) stream)
   (print-unreadable-object (description stream :identity t)
-    (if (equalp (description-name description) '{anonymous})
-	(format stream "{ANONYMOUS} [~{~A~}]" (object-parents description))
-	(format stream "~A" (description-name description)))))
+    (if (description-name description)
+	(format stream "~A" (description-name description))
+	(format stream "[~{~A~}]" (object-parents description)))))
 
 (defreply print-sheeple-object  ((attribute =>) stream)
   (print-unreadable-object (attribute stream :identity t)
-    (format stream "~A : ~A"
-	    (attribute-name attribute)
-	    (object-nickname attribute))))
+    (if (attribute-name attribute)
+	(format stream " ~A : ~A"
+		(attribute-name attribute)
+		(object-nickname attribute))
+	(format stream " ~A" (object-nickname attribute)))))

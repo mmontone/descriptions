@@ -1,5 +1,7 @@
-{} descriptions
+{} descriptions    
 ========
+
+[![Build Status](https://travis-ci.org/mmontone/descriptions.svg?branch=master)](https://travis-ci.org/mmontone/descriptions)
 
 Overview
 --------

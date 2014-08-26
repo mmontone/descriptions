@@ -13,4 +13,4 @@ install:
   - curl https://raw2.github.com/luismbo/cl-travis/master/install.sh | bash
 
 script:
-  - cl-launch -i "(ql:quickload :descriptions-test)(descriptions.test:DESCRIPTIONS-TESTS)"
+  - cl-launch -i "(setf *readtable* (copy-readtable nil))(ql:quickload :descriptions-test)(descriptions.test:DESCRIPTIONS-TESTS)"

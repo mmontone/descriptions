@@ -8,9 +8,14 @@ env:
   matrix:
     - LISP=sbcl
     - LISP=ecl
+    
 
 install:
   - curl https://raw2.github.com/luismbo/cl-travis/master/install.sh | bash
+  
+before_script:
+  - wget --no-check-certificate https://github.com/mmontone/clavier/archive/master.tar.gz -O /tmp/clavier.tar.gz
+  - tar -xvf /tmp/clavier.tar.gz -C $HOME/quicklisp/local-projects/
 
 script:
   - cl-launch -i "(setf *print-pprint-dispatch* (copy-pprint-dispatch nil))(setf *readtable* (copy-readtable nil))(ql:quickload :descriptions-test)(descriptions.test:DESCRIPTIONS-TESTS)"

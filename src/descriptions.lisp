@@ -137,10 +137,19 @@
 (defun attribute-documentation (attribute)
   (property-value attribute 'documentation))
 
+(defstruct undefined)
+(defvar %undefined% (make-undefined))
+(define-symbol-macro +undefined+ %undefined%)
+(defun undefinedp (value)
+  (undefined-p value))
+
 (define-attribute =>valued (=>)
-  ((value nil :accessor attribute-value)
-   (reader nil :accessor attribute-reader)
-   (writer nil :accessor attribute-writer)))
+  ((value +undefined+ :accessor attribute-value)
+   (reader +undefined+ :accessor attribute-reader)
+   (writer +undefined+ :accessor attribute-writer)))
+
+(defreply attribute-undefinedp ((attribute =>valued))
+  (undefinedp (attribute-value attribute)))
 
 (define-attribute =>symbol (=>valued)
   ()

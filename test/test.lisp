@@ -42,6 +42,18 @@
          :writer #'(setf password)))
   :documentation "A person description")
 
+(deftest undefined-attribute-test ()
+  (loop for attribute in (description-attributes {person})
+     do
+       (is (undefinedp (attribute-value attribute)))
+       (is (attribute-undefinedp attribute)))
+  (let ((attribute (make-attribute =>string :value "Hello")))
+    (is (not (undefinedp (attribute-value attribute))))
+    (is (not (attribute-undefinedp attribute))))
+  (let ((attribute (make-attribute =>string)))
+    (is (undefinedp (attribute-value attribute)))
+    (is (attribute-undefinedp attribute))))
+  
 (deftest with-described-object-test ()
   (let ((person (make-instance 'person
 			       :username "johnnash"

@@ -34,6 +34,8 @@
 	   #:=>to-one-relation
 	   #:display-object
 	   #:attribute
+	   #:undefinedp
+	   #:attribute-undefinedp
 
 	   ;; Attributes accessors
 	   #:attribute-name

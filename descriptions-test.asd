@@ -10,4 +10,6 @@
   :components ((:module test
 			:components
 			((:file "test"))
-			:serial t)))
+			:serial t))
+  :perform (asdf:test-op (o c)
+			 (uiop:symbol-call :descriptions.test :descriptions-tests)))

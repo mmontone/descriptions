@@ -14,4 +14,5 @@
 			((:file "package")
 			 (:file "descriptions")
 			 (:file "mop"))
-			:serial t)))
+			:serial t))
+  :in-order-to ((asdf:test-op (asdf:test-op :descriptions-test))))
